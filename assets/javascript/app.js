@@ -61,33 +61,25 @@ database.ref().on("child_added", function (childSnapshot) {
     var train = childSnapshot.val().formtrain;
     var destination = childSnapshot.val().formdestination;
     var frequency = childSnapshot.val().formfrequency;
-    var firstTime = childSnapshot.val().formtrain;
+    var firstTime = childSnapshot.val().formfirsttime;
 
     // console.log(train);
     // console.log(destination);
     // console.log(frequency);
     // console.log(firstTime);
 
-    var newRow = $("<tr>").append(
-        $("<td>").text(train),
-        $("<td>").text(destination),
-        $("<td>").text(frequency),
-        $("<td>").text("insert date"),
-        $("<td>").text(firstTime)
-
-    );
-
-    $("#train-table > tbody").append(newRow);
 
     // Assumptions
-    var tFrequency = 3;
+    var tFrequency = (frequency);
+    // console.log(frequency);
 
     // Time is 3:30 AM
-    var firstTime = "03:30";
+    var firstTime = (firstTime);
+    // console.log(firstTime);
 
     // First Time (pushed back 1 year to make sure it comes before current time)
     var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
-    console.log(firstTimeConverted);
+    // console.log(firstTimeConverted);
 
     // Current Time
     var currentTime = moment();
@@ -95,11 +87,11 @@ database.ref().on("child_added", function (childSnapshot) {
 
     // Difference between the times
     var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
-    console.log("DIFFERENCE IN TIME: " + diffTime);
+    // console.log("DIFFERENCE IN TIME: " + diffTime);
 
     // Time apart (remainder)
     var tRemainder = diffTime % tFrequency;
-    console.log(tRemainder);
+    // console.log(tRemainder);
 
     // Minute Until Train
     var tMinutesTillTrain = tFrequency - tRemainder;
@@ -109,5 +101,17 @@ database.ref().on("child_added", function (childSnapshot) {
     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
     console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
 
+
+    var newRow = $("<tr>").append(
+        $("<td>").text(train),
+        $("<td>").text(destination),
+        $("<td>").text(frequency),
+        $("<td>").text(nextTrain),
+        $("<td>").text(tMinutesTillTrain)
+
+
+    );
+
+    $("#train-table > tbody").append(newRow);
 
 });
